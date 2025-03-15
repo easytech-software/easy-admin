@@ -5,8 +5,6 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-@login_required
 def index(request):
-
     # Page from the theme 
-    return render(request, 'pages/index.html')
+    return render(request, 'home/index.html')

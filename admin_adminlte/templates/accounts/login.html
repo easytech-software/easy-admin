@@ -62,8 +62,8 @@
 
       <p class="mt-5 mb-2 text-center">
         <a href="{% url 'password_reset' %}">Resetar senha</a>
-        |
-        <a href="{% url 'register' %}" class="text-center">Cadastrar</a>
+        <!-- |
+        <a href="{% url 'register' %}" class="text-center">Cadastrar</a> -->
       </p>
       {% if form.non_field_errors %}
           {% for error in form.non_field_errors  %}

@@ -31,13 +31,14 @@ if not SECRET_KEY:
 DEBUG = 'RENDER' not in os.environ
 
 # Docker HOST
-ALLOWED_HOSTS = ['localhost','127.0.0.1','192.168.0.8']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','192.168.0.8','82.25.75.238','easytechsoftware.com.br','www.easytechsoftware.com.br']
 
 # Add here your deployment HOSTS
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://localhost:5085']
 
 #Render Context
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+
 if RENDER_EXTERNAL_HOSTNAME:    
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
@@ -65,9 +66,21 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Armazena no banco de dados
+
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'  # Armazena no cache (Redis, Memcached)
+
+# SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'  # Cookies assinados
+
+# SESSION_COOKIE_AGE = 12 * 60 * 60  # 12 horas em segundos
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # A sessão não será encerrada ao fechar o navegador
+# SESSION_SAVE_EVERY_REQUEST = True  # Atualiza a sessão a cada requisição do usuário
+
 ROOT_URLCONF = "core.urls"
 
 HOME_TEMPLATES = os.path.join(BASE_DIR, 'templates')
+
+SECURE_SSL_REDIRECT = False
 
 TEMPLATES = [
     {
@@ -113,9 +126,19 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',  # O arquivo do banco ficará na raiz do projeto
         }
     }
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'NAME': 'easyadmin',
+    #         'USER': 'postgres',
+    #         'PASSWORD': '123123',
+    #         'HOST': '82.25.75.238',
+    #         'PORT': '5432',
+    #     }
+    # }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -167,3 +190,22 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/django.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
